@@ -17,4 +17,5 @@ Delete Book
     Log To Console    ${response_body}
 
     Status Should Be    200
+    Should Be Equal    ${response_body}[message]    Axel Rauschmayer 
 
