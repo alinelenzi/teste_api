@@ -25,7 +25,7 @@ Create Bearer
 
     Status Should Be    200
     ${bearer}    Set Variable    ${response.json()}[bearer]
-    Set Suite Variable    ${bearer}                          #transforma a variável (token) em global para todo projeto ao realizar testes, lembrando que o token muda, portanto não poderia estar no variables.py
+    Set Suite Variable    ${bearer} 
     Log to Console    ${bearer}
 
 Create Authentication
