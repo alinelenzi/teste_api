@@ -4,44 +4,40 @@ Library    RequestsLibrary
 *** Keywords ***
 Create User
     [Arguments]    ${url}    ${userName}    ${password}
-    ${body}    Create Dictionary    username=${userName}    password=${password}
+    ${body}    Create Dictionary    userName=${userName}    password=${password}
 
-    ${response}    POST    url=https://bookstore.toolsqa.com/swagger/#/Account/AccountV1UserPost    json=${body}       
-    ${response_body}    Set Variable    ${response.json()}
-    Log To Console    ${response_body}
+    ${response}    POST    url=${url}/Account/v1/User    json=${body}       
 
     Status Should Be    201    # Validações
-    Should Be Equal    ${response_body}[userName]    userName
-
-    ${userId}    Set Variable    ${response.json()}[0][userId]
-    Set Suite Variable    ${userId}
-    Log to Console    ${userId}
+    ${userID}    Set Variable    ${response.json()}[userID]
+    Set Suite Variable    ${userID}
+    Log to Console    ${userID}
 
 Create Bearer
     [Arguments]    ${url}    ${userName}    ${password}
 
-    ${body}    Create Dictionary    username=${userName}    password=${password}
-    ${response}    POST    url=https://bookstore.toolsqa.com/swagger/#/Account/AccountV1GenerateTokenPost    json=${body}
+    ${body}    Create Dictionary    userName=${userName}    password=${password}
+    ${response}    POST    url=${url}/Account/v1/GenerateToken    json=${body}
 
     Status Should Be    200
-    ${bearer}    Set Variable    ${response.json()}[bearer]
+    ${bearer}    Set Variable    ${response.json()}[token]
     Set Suite Variable    ${bearer} 
     Log to Console    ${bearer}
 
-Create Authentication
+Create Authorized
     [Arguments]    ${url}    ${userName}    ${password}
 
-    ${body}    Create Dictionary    username=${userName}    password=${password}
-    ${response}    POST    url=https://bookstore.toolsqa.com/swagger/#/Account/AccountV1AuthorizedPost    json=${body}
+    ${body}    Create Dictionary    userName=${userName}    password=${password}
+    ${response}    POST    url=${url}/Account/v1/Authorized    json=${body}
 
     ${response_body}    Set Variable    ${response.json()}
     Log To Console    ${response_body}
 
     Status Should Be    200
-    Should Be Equal    ${response_body}    true
+    Should Be Equal    ${response_body}    ${{bool(True)}}
 
 Steps
     [Arguments]    ${url}    ${userName}    ${password}
     Create User    ${url}    ${userName}    ${password}
     Create Bearer    ${url}   ${userName}    ${password}
-    Create Authentication    ${url}    ${userName}    ${password}
+    Create Authorized    ${url}    ${userName}    ${password}
